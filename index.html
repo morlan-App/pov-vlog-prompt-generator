@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>POV Mystery Vlog Prompt Generator</title>
+<title>POV Mystery Vlog Generator PRO</title>
 
 <style>
 
 body{
-font-family:Arial, sans-serif;
-background:#0f172a;
+font-family:Arial;
+background:#020617;
 color:white;
 margin:0;
 padding:20px;
@@ -21,18 +20,18 @@ max-width:900px;
 margin:auto;
 }
 
+.card{
+background:#0f172a;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
 h1{
 text-align:center;
 }
 
-.card{
-background:#1e293b;
-padding:20px;
-border-radius:12px;
-margin-bottom:20px;
-}
-
-input,button{
+input,button,textarea{
 width:100%;
 padding:12px;
 margin-top:10px;
@@ -42,13 +41,12 @@ font-size:16px;
 }
 
 input{
-background:#334155;
+background:#1e293b;
 color:white;
 }
 
 button{
 background:#22c55e;
-color:black;
 font-weight:bold;
 cursor:pointer;
 }
@@ -58,22 +56,13 @@ background:#16a34a;
 }
 
 textarea{
-width:100%;
-height:160px;
-margin-top:10px;
+height:180px;
 background:#020617;
 color:#22c55e;
-padding:10px;
-border-radius:8px;
 }
 
-.copyBtn{
+.copy{
 background:#3b82f6;
-margin-top:5px;
-}
-
-.copyBtn:hover{
-background:#2563eb;
 }
 
 .preview{
@@ -83,8 +72,8 @@ margin-top:10px;
 }
 
 </style>
-
 </head>
+
 <body>
 
 <div class="container">
@@ -93,22 +82,19 @@ margin-top:10px;
 
 <div class="card">
 
-<label>Upload Vlogger Reference Photo</label>
+<label>Upload Vlogger Photo Reference</label>
 <input type="file" id="photoInput">
 
 <img id="preview" class="preview">
 
-<label>Number of Scenes (min 3)</label>
+<label>Number of Scenes</label>
 <input type="number" id="sceneCount" value="3" min="3">
 
-<button onclick="generatePrompt()">Generate Prompt</button>
+<button onclick="generate()">Generate Prompt</button>
 
 </div>
 
-
 <div class="card">
-
-<h2>Generated Prompts</h2>
 
 <button onclick="copyAll()">COPY ALL PROMPTS</button>
 
@@ -118,41 +104,52 @@ margin-top:10px;
 
 </div>
 
-
 <script>
 
 const locations=[
 "abandoned underwater city",
-"mysterious alien jungle planet",
-"ancient underground civilization",
+"ancient underground alien temple",
 "haunted floating island",
-"lost desert megastructure",
-"foggy ghost town in the mountains",
-"abandoned futuristic space colony",
-"giant cave world with glowing crystals",
-"hidden temple inside jungle canyon",
-"dark frozen alien planet"
+"giant crystal cave world",
+"abandoned space colony",
+"foggy mountain ghost town",
+"lost jungle civilization",
+"mysterious desert megastructure",
+"frozen alien planet ruins",
+"underground lava tunnel city",
+"ancient titan skeleton valley",
+"sunken pirate megacity",
+"abandoned military bunker maze",
+"dark forest full of ruins",
+"alien jungle megatrees",
+"floating rock planet",
+"lost temple canyon",
+"abandoned research station",
+"giant cave ecosystem",
+"hidden mountain city"
+]
+
+const creatures=[
+"shadow creature",
+"ancient guardian statue that moves",
+"unknown alien entity",
+"giant cave monster",
+"mysterious glowing figure",
+"strange humanoid silhouette",
+"dark creature watching from distance"
 ]
 
 const times=[
 "sunset",
 "midnight",
-"foggy morning",
+"foggy dawn",
 "stormy evening",
-"moonlit night",
-"dawn",
-"rainy twilight"
+"moonlit night"
 ]
 
-const atmospheres=[
-"mysterious",
-"tense",
-"eerie",
-"ominous",
-"cinematic",
-"dark atmospheric"
-]
-
+function random(arr){
+return arr[Math.floor(Math.random()*arr.length)]
+}
 
 document.getElementById("photoInput").onchange=function(e){
 
@@ -166,80 +163,84 @@ reader.readAsDataURL(e.target.files[0])
 
 }
 
+function narration(scene,total){
 
-function random(arr){
-return arr[Math.floor(Math.random()*arr.length)]
+if(scene==1) return "Alright everyone, I just arrived here and this place already feels really strange."
+
+if(scene==2) return "I'm walking deeper now. Everything around here looks abandoned."
+
+if(scene==3) return "Wait... did you hear that sound? Something definitely moved."
+
+if(scene<total) return "This place is getting more disturbing the deeper I go."
+
+return "Okay that's it, something is definitely here. I'm leaving right now!"
+
 }
 
+function generate(){
 
-function generatePrompt(){
-
-const sceneCount=document.getElementById("sceneCount").value
+const scenes=parseInt(document.getElementById("sceneCount").value)
 
 const location=random(locations)
 const time=random(times)
-const mood=random(atmospheres)
+const creature=random(creatures)
 
-let output=""
+let html=""
 
 const imagePrompt=
 
-`HYPER REALISTIC POV VLOG IMAGE
+`Hyper realistic POV vlog image
 
-Reference character: use uploaded reference photo as the main vlogger
+Main character: male vlogger using uploaded reference photo
 
 Scene:
-A mysterious exploration vlogger arrives at a ${location}.
+The vlogger arrives at a ${location} for the first time.
 
 Environment:
-The location is extremely detailed and cinematic. The environment feels ${mood}. Massive environmental storytelling elements surround the area.
+extremely cinematic mysterious location
+massive environmental storytelling
+epic scale environment
 
-Time of day:
+Time:
 ${time}
-
-Camera:
-POV vlog camera held in hand, ultra realistic lens, natural vlog framing
 
 Style:
 hyper realistic
-cinematic lighting
 8k
 photorealistic
+cinematic lighting
 documentary realism
-sharp details
-volumetric lighting
-epic atmosphere
 `
 
-output+=createBlock("IMAGE PROMPT",imagePrompt)
+html+=block("IMAGE PROMPT",imagePrompt)
 
-for(let i=1;i<=sceneCount;i++){
+let creatureScene=Math.floor(Math.random()*(scenes-2))+2
 
-let story=""
+for(let i=1;i<=scenes;i++){
+
+let action=""
 
 if(i==1){
-
-story=`The vlogger begins exploring the location carefully while talking to the camera.`
-
+action="The vlogger slowly explores the entrance of the location."
 }
 
-else if(i==sceneCount){
+else if(i==creatureScene){
+action=`The vlogger suddenly notices a ${creature} in the distance.`
+}
 
-story=`The vlogger suddenly encounters something terrifying in the distance and starts running in panic.`
-
+else if(i==scenes){
+action="The vlogger runs away in fear while holding the camera."
 }
 
 else{
-
-story=`The exploration continues deeper into the mysterious location, strange sounds can be heard nearby.`
-
+action="The vlogger continues exploring deeper while reacting to strange sounds."
 }
 
-const videoPrompt=
+let prompt=
 
-`POV MYSTERY VLOG VIDEO PROMPT
+`POV Mystery Exploration Video
 
-SCENE ${i}
+Scene ${i}
 
 Environment Lock:
 ${location}
@@ -247,91 +248,89 @@ ${location}
 Time:
 ${time}
 
-Atmosphere:
-${mood}
-
 Action:
-${story}
+${action}
 
-Camera Movement:
-natural handheld vlog camera
-slight shake
-cinematic POV
-slow walking movement
+Camera:
+handheld POV vlog
+natural shake
+slow walking
 environment scanning
 
 Character:
-male exploration vlogger using uploaded reference face
+male explorer vlogger using reference face
 
-Narration (male voice English):
-"This place is unbelievable... I have never seen anything like this before."
+Narration (male english voice):
+"${narration(i,scenes)}"
 
-Sound Design:
-ambient wind
-distant strange noises
-environmental echoes
+Sound:
+wind ambience
+distant echoes
+strange noises
 footsteps
-subtle horror atmosphere
 
-Visual Style:
+Visual style:
 hyper realistic
 cinematic
-documentary exploration
-8k realism
-high detail environment
+8k
+ultra detailed environment
 
 Duration:
 6 seconds
 `
 
-output+=createBlock("VIDEO PROMPT SCENE "+i,videoPrompt)
+html+=block("VIDEO SCENE "+i,prompt)
 
 }
 
-document.getElementById("output").innerHTML=output
+const title=`I Explored a ${location} and Something Was Watching Me`
+
+const hashtags="#mystery #povvlog #horrorvlog #exploration #foundfootage #creepy #adventure"
+
+html+=block("YOUTUBE TITLE",title)
+html+=block("HASHTAGS",hashtags)
+
+document.getElementById("output").innerHTML=html
 
 }
 
-
-function createBlock(title,text){
+function block(title,text){
 
 return `
 
 <h3>${title}</h3>
-
 <textarea>${text}</textarea>
-
-<button class="copyBtn" onclick="copyText(this)">Copy</button>
+<button class="copy" onclick="copy(this)">Copy</button>
 
 `
 
 }
 
+function copy(btn){
 
-function copyText(btn){
+const t=btn.previousElementSibling
 
-const textarea=btn.previousElementSibling
-
-textarea.select()
+t.select()
 
 document.execCommand("copy")
 
 }
 
-
 function copyAll(){
 
-const texts=document.querySelectorAll("textarea")
+const areas=document.querySelectorAll("textarea")
 
-let combined=""
+let txt=""
 
-texts.forEach(t=>combined+=t.value+"\n\n")
+areas.forEach(a=>txt+=a.value+"\n\n")
 
-navigator.clipboard.writeText(combined)
+navigator.clipboard.writeText(txt)
+
+alert("All prompts copied")
 
 }
 
 </script>
 
 </body>
-  </html>
+</html>
